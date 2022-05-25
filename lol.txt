@@ -1,0 +1,1170 @@
+PRACTICAL NO: 01 - A
+
+A] AIM: Convert Text to Speech
+
+Source Code:
+
+> pip install --upgrade pip
+
+> pip install nltk
+
+> pip install gtts
+
+> pip install playsound
+
+from playsound import playsound
+
+from gtts import gTTS
+
+text = "Welcome Shreya Ingale"
+
+language="en"
+
+myobj=gTTS(text=text,lang=language,slow=False)
+
+myobj.save("OutputPrac1A.mp3")
+
+playsound("OutputPrac1A.mp3")
+
+
+
+PRACTICAL NO: 01 – B
+
+B] AIM: Convert Speech to Text
+
+
+
+Source Code:
+
+> pip install SpeechRecognition pydub
+
+import speech_recognition as sr
+
+file1="whatswhetherlike.wav"
+
+r = sr.Recognizer()
+
+with sr.AudioFile(file1) as source:
+
+ audio_data=r.record(source)
+
+ text=r.recognize_google(audio_data)
+
+ print(text)
+
+
+
+
+
+PRACTICAL NO: 02 - A
+
+A] AIM: Study of various Corpus – Brown, Inaugural, with various methods like fields, raw, words, sentences, categories.
+
+
+
+Source Code:
+
+import nltk
+
+from nltk.corpus import brown
+
+nltk.download('brown')
+
+print('File ids of brown corpus\n',brown.fileids())
+
+ca01 = brown.words('ca01')
+
+print('\nca01 has following words:\n',ca01)
+
+print('\nca01 has',len(ca01),'words')
+
+print('\nCategories or files in brown corpus:\n')
+
+print(brown.categories())
+
+print('nStats for each text\n')
+
+print('AvgWordLen\tAvgSentenceLen\tno.ofTimesEachWordAppearsOnAvg\t\tFileName')
+
+for fileid in brown.fileids():
+
+ num_chars=len(brown.raw(fileid))
+
+ num_words=len(brown.words(fileid))
+
+ num_sents=len(brown.sents(fileid))
+
+ num_vocab=len(set([w.lower() for w in brown.words(fileid)]))
+
+ print(int(num_chars/num_words),'\t\t',int(num_words/num_sents),'\t\t',int(num_words/num_vocab),'\t\t',fileid)
+
+
+
+
+
+PRACTICAL NO: 02 – B
+
+B] AIM: Create and use your own corpora (plaintext, categorical).
+
+Source Code:
+
+import codecs
+
+import nltk
+
+from nltk.corpus import PlaintextCorpusReader
+
+nltk.download('gutenberg')
+
+from nltk.corpus import gutenberg
+
+corpusdir = r"D:\Msc IT study material\Sample"
+
+filelist = PlaintextCorpusReader(corpusdir,'.*')
+
+print('\nFile list:\n')
+
+print(filelist.fileids())
+
+print(filelist.root)
+
+print('AvgWordLen\tAvgSentLen\tno.ofTimesEachWordAppearsonAvg\tFileName')
+
+for fileid in gutenberg.fileids():
+
+ num_chars=len(gutenberg.raw(fileid))
+
+ num_words=len(gutenberg.words(fileid))
+
+ num_sents=len(gutenberg.sents(fileid))
+
+ num_vocab=len(set([w.lower() for w in gutenberg.words(fileid)]))
+
+print(int(num_chars/num_words),'\t\t',int(num_words/num_sents),'\t\t',int(num_words/num_vocab),'\t\t',fileid)
+
+
+
+
+
+PRACTICAL NO: 02 – C
+
+C] AIM: Tokenization of sentences and words.
+
+
+
+import nltk
+
+from nltk import tokenize
+
+nltk.download('punkt')
+
+nltk.download('words')
+
+text = " The sample, arranged as a bundle of rectangular strips, is caused to rotate about a central horizontal axis between the poles of an upright C-shaped magnet."
+
+sents = tokenize.sent_tokenize(text)
+
+print("\nsentence tokenization\n===================\n",sents)
+
+# word tokenization
+
+print("\nword tokenization\n===================\n")
+
+for index in range(len(sents)):
+
+  words = tokenize.word_tokenize(sents[index])
+
+  print(words)
+
+
+
+PRACTICAL NO: 02 – D
+
+D] AIM: Write a program to find the most frequent noun tags.
+
+
+
+import nltk
+
+nltk.download('averaged_perceptron_tagger')
+
+from collections import defaultdict
+
+text = nltk.word_tokenize("Nick likes to play football. Nick does not like to play cricket.")
+
+tagged = nltk.pos_tag(text)
+
+print(tagged)
+
+# checking if it is a noun or not
+
+addNounWords = []
+
+count=0
+
+for words in tagged:
+
+  val = tagged[count][1]
+
+  if(val == 'NN' or val == 'NNS' or val == 'NNPS' or val == 'NNP'):
+
+    addNounWords.append(tagged[count][0])
+
+  count+=1
+
+print (addNounWords)
+
+temp = defaultdict(int)
+
+# memoizing count
+
+for sub in addNounWords:
+
+  for wrd in sub.split():
+
+    temp[wrd] += 1
+
+# getting max frequency
+
+res = max(temp, key=temp.get)
+
+# printing result
+
+print("Word with maximum frequency : " + str(res))
+
+
+
+PRACTICAL NO: 02 – E
+
+E] AIM: Map Words to Properties Using Python Dictionaries.
+
+
+
+#creating and printing a dictionary by mapping word with its properties
+
+thisdict = {
+
+"brand": "Ford",
+
+"model": "Mustang", "year": 1964}
+
+print(thisdict)
+
+print(thisdict["brand"])
+
+print(len(thisdict))
+
+print(type(thisdict))
+
+
+
+PRACTICAL NO: 02 – F
+
+F] AIM: Study i) Default Tagger, ii) Regular expression tagger
+
+i) Default Tagger:
+
+
+
+import nltk
+
+from nltk.tag import DefaultTagger
+
+deftagger = DefaultTagger('NN')
+
+print(deftagger.tag_sents('This is NLP lecture in room number 305 . Today we are going to learn tokenization.'))
+
+
+
+ii) Regular expression tagger
+
+
+
+from nltk.corpus import brown
+
+from nltk.tag import RegexpTagger
+
+test_sent = brown.sents(categories='news')[0]
+
+regexp_tagger = RegexpTagger(
+
+[(r'^-?[0-9]+(.[0-9]+)?$', 'CD'), # cardinal numbers
+
+(r'(The|the|A|a|An|an)$', 'AT'), # articles
+
+(r'.*able$', 'JJ'), # adjectives
+
+(r'.*ness$', 'NN'), # nouns formed from adjectives 
+
+(r'.*ly$', 'RB'), # adverbs(r'.*s$', 'NNS'), # plural nouns
+
+(r'.*ing$', 'VBG'), # gerunds
+
+(r'.*ed$', 'VBD'), # past tense verbs 
+
+(r'.*', 'NN') # nouns (default)])
+
+print(regexp_tagger)
+
+print(regexp_tagger.tag(test_sent))
+
+
+
+PRACTICAL NO: 03 - A
+
+A] AIM: Study of Wordnet Dictionary with methods as synsets, definitions, examples, antonyms
+
+
+
+import nltk
+
+nltk.download('wordnet')
+
+nltk.download('omw-1.4')
+
+from nltk.corpus import wordnet
+
+print(wordnet.synsets("computer"))
+
+# definition and example of the word ‘computer’
+
+print(wordnet.synset("computer.n.01").definition())
+
+#examples
+
+print("Examples:", wordnet.synset("computer.n.01").examples())
+
+#get Antonyms
+
+print(wordnet.lemma('buy.v.01.buy').antonyms())
+
+
+
+PRACTICAL NO: 03 - B
+
+B] AIM: Study lemmas, hyponyms, hypernyms.
+
+
+
+import nltk
+
+from nltk.corpus import wordnet
+
+print(wordnet.synsets("computer"))
+
+print(wordnet.synset("computer.n.01").lemma_names())
+
+#print all lemmas for a given synset
+
+print(wordnet.synset('computer.n.01').lemmas())
+
+#get the synset corresponding to lemma
+
+print(wordnet.lemma('computer.n.01.computing_device').synset())
+
+#Get the name of the lemma
+
+print(wordnet.lemma('computer.n.01.computing_device').name())
+
+#Hyponyms give abstract concepts of the word that are much more specific #the list of hyponyms words of the computer
+
+syn = wordnet.synset('computer.n.01')
+
+print(syn.hyponyms)
+
+print([lemma.name() for synset in syn.hyponyms() for lemma in synset.lemmas()])
+
+#the semantic similarity in WordNet
+
+vehicle = wordnet.synset('vehicle.n.01')
+
+car = wordnet.synset('car.n.01')
+
+print(car.lowest_common_hypernyms(vehicle))
+
+
+
+
+
+
+
+PRACTICAL NO: 03 - C
+
+C] AIM: Write a program using python to find synonym and antonym of word "active" using Wordnet.
+
+
+
+from nltk.corpus import wordnet
+
+print( wordnet.synsets("active"))
+
+print(wordnet.lemma('active.a.01.active').antonyms())
+
+
+
+PRACTICAL NO: 03 - D
+
+D] AIM: Compare two nouns.
+
+
+
+import nltk
+
+from nltk.corpus import wordnet
+
+syn1 = wordnet.synsets('football')
+
+syn2 = wordnet.synsets('soccer')
+
+# A word may have multiple synsets, so need to compare each synset of word1 with synset of word2
+
+for s1 in syn1:
+
+ for s2 in syn2:
+
+ print("Path similarity of: ")
+
+ print(s1, '(', s1.pos(), ')', '[', s1.definition(), ']')
+
+ print(s2, '(', s2.pos(), ')', '[', s2.definition(), ']')
+
+ print(" is", s1.path_similarity(s2))
+
+ print()
+
+
+
+
+
+PRACTICAL NO: 03 - E
+
+E] AIM: Handling stopword:
+
+1. Using nltk Adding or Removing Stop Words in NLTK's Default Stop Word List.
+
+Source Code:
+
+import nltk
+
+from nltk.corpus import stopwords
+
+nltk.download('stopwords')
+
+from nltk.tokenize import word_tokenize
+
+text = "Yashesh likes to play football, however he is not too fond of tennis."
+
+text_tokens = word_tokenize(text)
+
+tokens_without_sw = [word for word in text_tokens if not word in stopwords.words()]
+
+print(tokens_without_sw)
+
+#add the word play to the NLTK stop word collection
+
+all_stopwords = stopwords.words('english')
+
+all_stopwords.append('play')
+
+text_tokens = word_tokenize(text)
+
+tokens_without_sw = [word for word in text_tokens if not word in all_stopwords]
+
+print(tokens_without_sw)
+
+#remove ‘not’ from stop word collection
+
+all_stopwords.remove('not')
+
+text_tokens = word_tokenize(text)
+
+tokens_without_sw = [word for word in text_tokens if not word in all_stopwords]
+
+print(tokens_without_sw)
+
+
+
+
+
+PRACTICAL NO: 03 - E
+
+E] AIM: Handling stopword:
+
+2. Using Gensim Adding and Removing Stop Words in Default Gensim Stop Words List.
+
+Source Code:
+
+#pip install gensim
+
+import gensim
+
+from nltk.tokenize import word_tokenize
+
+from gensim.parsing.preprocessing import remove_stopwords
+
+text = "Yashesh likes to play football, however he is not too fond of tennis."
+
+filtered_sentence= remove_stopwords(text)
+
+print(filtered_sentence)
+
+all_stopwords = gensim.parsing.preprocessing.STOPWORDS
+
+print(all_stopwords)
+
+'''The following script adds likes and play to the list of stop words in Gensim:'''
+
+from gensim.parsing.preprocessing import STOPWORDS
+
+all_stopwords_gensim = STOPWORDS.union(set(['likes', 'play']))
+
+text = "Yashesh likes to play football, however he is not too fond of tennis."
+
+text_tokens = word_tokenize(text)
+
+tokens_without_sw = [word for word in text_tokens if not word in all_stopwords_gensim]
+
+print(tokens_without_sw)
+
+#The following script removes the word "not" from the set of stop words in Gensim:'''
+
+from gensim.parsing.preprocessing import STOPWORDS
+
+all_stopwords_gensim = STOPWORDS
+
+sw_list = {"not"}
+
+all_stopwords_gensim = STOPWORDS.difference(sw_list)
+
+text = "Yashesh likes to play football, however he is not too fond of tennis."
+
+text_tokens = word_tokenize(text)
+
+tokens_without_sw = [word for word in text_tokens if not word in all_stopwords_gensim]
+
+print(tokens_without_sw)
+
+
+
+
+
+
+
+PRACTICAL NO: 03 - E
+
+E] AIM: Handling stopword:
+
+3. Using Spacy Adding and Removing Stop Words in Default Spacy Stop Words List.
+
+Source Code:
+
+import spacy
+
+import nltk
+
+from nltk.tokenize import word_tokenize
+
+sp = spacy.load('en_core_web_sm')
+
+all_stopwords = sp.Defaults.stop_words
+
+all_stopwords.add('play')
+
+text = "Yashesh likes to play football, however he is not too fond of tennis."
+
+text_tokens = word_tokenize(text)
+
+tokens_without_sw = [word for word in text_tokens if not word in all_stopwords]
+
+print(tokens_without_sw)
+
+all_stopwords.remove('not')
+
+tokens_without_sw = [word for word in text_tokens if not word in all_stopwords]
+
+print(tokens_without_sw)
+
+
+
+
+
+PRACTICAL NO: 04 - A
+
+
+
+A] AIM: Tokenization using Python’s split() function.
+
+Source Code:
+
+text = """ This tool is an a beta stage. Alexa developers can use Get Metrics API to seamlessly analyse metric. It also supports custom skill model, prebuilt Flash Briefing model, and the Smart Home Skill API. You can use this tool for creation of monitors, alarms, and dashboards that spotlight changes. The release of these three tools will enable developers to create visual rich skills for Alexa devices with screens. Amazon describes these tools as the collection of tech and tools for creating visually rich and interactive voice experiences. """
+
+data = text.split('.')
+
+for i in data:
+
+ print (i)
+
+
+
+
+
+
+
+PRACTICAL NO: 04 - B
+
+B] AIM: Tokenization using Regular Expressions (RegEx)
+
+Source Code:
+
+import nltk
+
+# import RegexpTokenizer() method from nltk
+
+from nltk.tokenize import RegexpTokenizer
+
+# Create a reference variable for Class RegexpTokenizer
+
+tk = RegexpTokenizer('\s+', gaps = True)
+
+# Create a string input
+
+str = "I love to study Natural Language Processing in Python"
+
+# Use tokenize method
+
+tokens = tk.tokenize(str)
+
+print(tokens)
+
+
+
+
+
+
+
+PRACTICAL NO: 04 - C
+
+C] AIM: Tokenization using NLTK
+
+Source Code:
+
+import nltk
+
+from nltk.tokenize import word_tokenize
+
+# Create a string input
+
+str = "I love to study Natural Language Processing in Python"
+
+# Use tokenize method
+
+print(word_tokenize(str))
+
+
+
+
+
+
+
+PRACTICAL NO: 04 - D
+
+D] AIM: Tokenization using the spaCy library code.
+
+Source Code:
+
+import spacy
+
+nlp = spacy.blank("en")
+
+# Create a string input
+
+str = "I love to study Natural Language Processing in Python"
+
+# Create an instance of document;
+
+# doc object is a container for a sequence of Token
+
+doc = nlp(str)
+
+# Read the words; Print the words #
+
+words = [word.text for word in doc]
+
+print(words)
+
+Output:
+
+ 
+
+PRACTICAL NO: 04 - E
+
+E] AIM: Tokenization using Keras.
+
+Source Code:
+
+#pip install keras
+
+#pip install tensorflow
+
+import keras
+
+from keras.preprocessing.text import text_to_word_sequence
+
+# Create a string input
+
+str = "I love to study Natural Language Processing in Python"
+
+# tokenizing the text
+
+tokens = text_to_word_sequence(str)
+
+print(tokens)
+
+
+
+
+
+
+
+PRACTICAL NO: 04 - F
+
+F] AIM: Tokenization using Gensim
+
+Source Code:
+
+#pip install genism
+
+from gensim.utils import tokenize
+
+# Create a string input
+
+str = "I love to study Natural Language Processing in Python"
+
+# tokenizing the text
+
+print(list(tokenize(str)))
+
+
+
+ 
+
+PRACTICAL NO: 05 - A
+
+A] Aim: Word tokenization in Hindi
+
+Source Code:
+
+!pip install torch==1.3.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
+!pip install inltk
+
+!pip install tornado==4.5.3
+
+from inltk.inltk import setup
+
+setup('hi')
+
+from inltk.inltk import tokenize
+
+hindi_text = """प्राकति क भाषा सीखना बहुि ति लचस्प है।"""
+
+# tokenize(input text, language code)
+
+tokenize(hindi_text, "hi")
+
+
+
+
+
+
+
+PRACTICAL NO: 05 - B
+
+B] Aim: Generate similar sentences from a given Hindi text input.
+
+Source Code:
+
+from inltk.inltk import setup
+
+setup('hi')
+
+from inltk.inltk import get_similar_sentences
+
+# get similar sentences to the one given in hindi
+
+output = get_similar_sentences('मैं आज बहुि खुश हूं ',5,'hi')
+
+print(output)
+
+
+
+
+
+ 
+
+PRACTICAL NO: 06 - A
+
+A] Aim: Part of speech Tagging and chunking of user defined text.
+
+Source Code:
+
+import nltk
+
+from nltk import tokenize
+
+nltk.download('punkt')
+
+from nltk import tag
+
+from nltk import chunk
+
+nltk.download('averaged_perceptron_tagger')
+
+nltk.download('maxent_ne_chunker')
+
+nltk.download('words')
+
+para = "Don't be pushed around by the fears in your mind. Be led by the dreams in your heart."
+
+sents = tokenize.sent_tokenize(para)
+
+print("\nsentence tokenization\n===================\n",sents)
+
+# word tokenization
+
+print("\nword tokenization\n===================\n")
+
+for index in range(len(sents)): words = tokenize.word_tokenize(sents[index])
+
+print(words)
+
+# POS Tagging
+
+tagged_words = []
+
+for index in range(len(sents)): tagged_words.append(tag.pos_tag(words))
+
+print("\nPOS Tagging\n===========\n",tagged_words)
+
+#chunking
+
+tree = []
+
+for index in range(len(sents)): tree.append(chunk.ne_chunk(tagged_words[index]))
+
+print("\nchunking\n========\n")
+
+print(tree)
+
+
+
+PRACTICAL NO: 06 - B
+
+B] Aim: Named Entity Recognition using User Defined Text.
+
+Source Code:
+
+import nltk
+
+nltk.download('punkt')
+
+nltk.download('averaged_perceptron_tagger')
+
+nltk.download('maxent_ne_chunker')
+
+nltk.download('words')
+
+# Step Two: Load Data
+
+sentence = "WASHINGTON -- In the wake of a string of abuses by New York police officers in the 1990s, Loretta E. Lynch, the top federal prosecutor in Brooklyn, spoke forcefully about the pain of a broken trust that African-Americans felt and said the responsibility for repairing generations of miscommunication and mistrust fell to law enforcement."
+
+# Step Three: Tokenise, find parts of speech and chunk words
+
+for sent in nltk.sent_tokenize(sentence):
+
+  for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sent))):
+
+    if hasattr(chunk, 'label'):
+
+      print(chunk.label(), ' '.join(c[0] for c in chunk))
+
+
+
+  
+
+PRACTICAL NO: 07 - A
+
+A] Aim: Define Grammar using NLTK. Analyze the sentence using the same.
+
+Source Code:
+
+import nltk
+
+from nltk import tokenize
+
+grammar1 = nltk.CFG.fromstring("""
+
+S -> VP
+
+VP -> VP NP
+
+NP -> Det NP
+
+Det -> 'that'
+
+NP -> singular Noun
+
+NP -> 'flight'
+
+VP -> 'Book'
+
+""")
+
+sentence = "Book that flight"
+
+for index in range(len(sentence)): all_tokens = tokenize.word_tokenize(sentence)
+
+print(all_tokens)
+
+parser = nltk.ChartParser(grammar1)
+
+for tree in parser.parse(all_tokens):
+
+ print(tree)
+
+ tree.draw()
+
+Output:
+
+
+
+PRACTICAL NO: 07 - B
+
+B] Aim: Accept the input string with Regular expression of Finite Automation ( 101+ ).
+
+Source Code:
+
+def FA(s):
+
+#if the length is less than 3 then it can't be accepted, Therefore end the process.
+
+  if len(s)<3:
+
+    return "Rejected"
+
+#first three characters are fixed. Therefore, checking them using index
+
+  if s[0]=='1':
+
+    if s[1]=='0':
+
+      if s[2]=='1':
+
+# After index 2 only "1" can appear. Therefore break the process if any other character is detected
+
+        for i in range(3,len(s)):
+
+          if s[i]!='1':
+
+            return "Rejected"
+
+        return "Accepted" # if all 4 nested if true
+
+      return "Rejected" # else of 3rd if
+
+    return "Rejected" # else of 2nd if
+
+  return "Rejected" # else of 1st if
+
+inputs=['1','10101','101','10111','01010','100','','101101']
+
+for i in inputs:
+
+ print(i,"=",FA(i))
+
+
+
+
+
+PRACTICAL NO: 07 - C
+
+C] Aim: Accept the input string with Regular expression of FA ((a+b)*bba)).
+
+Source Code:
+
+def FA(s):
+
+  size=0
+
+#scan complete string and make sure that it contains only 'a' & 'b'
+
+  for i in s:
+
+    if i=='a' or i=='b':
+
+      size+=1
+
+    else:
+
+      return "Rejected"
+
+#After checking that it contains only 'a' & 'b'
+
+#check it's length it should be 3 atleast
+
+  if size>=3:
+
+#check the last 3 elements
+
+    if s[size-3]=='b':
+
+      if s[size-2]=='b':
+
+        if s[size-1]=='a':
+
+          return "Accepted" # if all 4 if true
+
+        return "Rejected" # else of 4th if
+
+      return "Rejected" # else of 3rd if
+
+    return "Rejected" # else of 2nd if
+
+  return "Rejected" # else of 1st if
+
+inputs=['bba','ababbba','abba','abb','baba','bbb','']
+
+for i in inputs:
+
+  print(i,"=",FA(i))
+
+
+
+
+
+
+
+PRACTICAL NO: 07 - D
+
+D] Aim: Implementation of Deductive Chart Parsing using context free grammar and a given sentence.
+
+Source Code:
+
+import nltk
+
+from nltk import tokenize
+
+grammar1 = nltk.CFG.fromstring("""
+
+S -> NP VP
+
+PP -> P NP
+
+NP -> Det N | Det N PP | 'I'
+
+VP -> V NP | VP PP
+
+Det -> 'a' | 'my'
+
+N -> 'bird' | 'balcony'
+
+V -> 'saw'
+
+P -> 'in'
+
+""")
+
+sentence = "I saw a bird in my balcony"
+
+for index in range(len(sentence)):
+
+  all_tokens = tokenize.word_tokenize(sentence)
+
+print(all_tokens)
+
+# all_tokens = ['I', 'saw', 'a', 'bird', 'in', 'my','balcony']
+
+parser = nltk.ChartParser(grammar1)
+
+for tree in parser.parse(all_tokens):
+
+ print(tree)
+
+ tree.draw()
+
+
+
+
+
+PRACTICAL NO: 08 - A
+
+A] AIM: Text Tokenization using (1) Porter Stemmer, (2) Lancaster Stemmer, (3) Regular Expression Stemmer (4) Snowball Stemmer (5) WordNet Lemmatize
+
+Source Code:
+
+# PorterStemmer
+
+import nltk
+
+from nltk.stem import PorterStemmer
+
+word_stemmer = PorterStemmer()
+
+print(word_stemmer.stem('Organization'))
+
+#LancasterStemmer
+
+import nltk
+
+from nltk.stem import LancasterStemmer
+
+Lanc_stemmer = LancasterStemmer()
+
+print(Lanc_stemmer.stem('Organization'))
+
+#RegexpStemmer
+
+import nltk
+
+from nltk.stem import RegexpStemmer
+
+Reg_stemmer = RegexpStemmer('ing$|s$|e$|able$', min=4)
+
+print(Reg_stemmer.stem('writing'))
+
+#SnowballStemmer
+
+import nltk
+
+from nltk.stem import SnowballStemmer
+
+english_stemmer = SnowballStemmer('english')
+
+print(english_stemmer.stem ('writing'))
+
+
+
+
+
+PRACTICAL NO: 08 - B
+
+B] AIM: Study WordNetLemmatizer
+
+Source Code:
+
+#WordNetLemmatizer
+
+from nltk.stem import WordNetLemmatizer
+
+lemmatizer = WordNetLemmatizer()
+
+print("word :\tlemma")
+
+print("rocks :", lemmatizer.lemmatize("rocks"))
+
+print("corpora :",lemmatizer.lemmatize("corpora"))
+
+# a denotes adjective in "pos"
+
+print("better :", lemmatizer.lemmatize("better", pos ="a"))
+
